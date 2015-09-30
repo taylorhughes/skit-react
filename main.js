@@ -5,6 +5,9 @@ var util = require('util');
 var skit = require('skit');
 var scriptresource = skit.scriptresource;
 var JavaScriptResource = scriptresource.JavaScriptResource;
+var styleresource = skit.styleresource;
+var StyleResource = styleresource.StyleResource;
+var sass = require('node-sass');
 
 var transformer = require('./JSXTransformer');
 
@@ -32,10 +35,25 @@ ReactResource.prototype.aliasForDependencyPath = function(dependencyPath) {
     return 'React';
   }
   return JavaScriptResource.prototype.aliasForDependencyPath.call(this, dependencyPath);
-}
+};
 
-// This sets the .jsx extension to be handled by this Resource subtype.
+// This sets the .jsx extension to be handled by this JavaScriptResource subtype.
 scriptresource.setResourceWrapper('.jsx', ReactResource);
+
+
+
+function SassResource(filePath, resourcePath, source) {
+  var output = sass.renderSync({
+    data: source
+  });
+
+  var transformedSource = '' + output.css;
+  StyleResource.call(this, filePath, resourcePath, transformedSource);
+}
+util.inherits(SassResource, StyleResource);
+
+// This sets the .sass extension to be handled by this StyleResource subtyle.
+styleresource.setResourceWrapper('.sass', SassResource);
 
 
 // Starts the server.

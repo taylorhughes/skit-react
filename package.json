@@ -1,7 +1,8 @@
 {
   "name": "skit-demo",
   "dependencies": {
-    "skit": "latest"
+    "skit": "latest",
+    "node-sass": "3.3.3"
   },
   "description": "...",
   "readme": "...",
